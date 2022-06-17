@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-myname
+  labels:
+    env: prod
+    app: {{ .Release.Name }}
+    owner: alex
+spec:
+  selector:
+    matchLabels:
+      project: myname  #service with look for those PODS Labels
+  template:
+    metadata:
+      labels:
+        project: myname
+    spec:
+      containers:
+        - name: myname
+          image: {{ .Values.container.image}}
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: myconf
+
+
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-myname
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myname
+  labels:
+    env: prod
+    owner: dyshkoSasha
+spec:
+  selector:
+    project: myname  #selecting PODS with those Labels
+  ports:
+    - name: myname
+      protocol: TCP
+      port: 8080 #port loadBalancer
+      targetPort: 8080 #port pod
+  type: ClusterIP
