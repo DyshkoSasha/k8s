@@ -1,0 +1,20 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/test
+
+spring:
+  application:
+    name: k8s
+
+result:
+  name: "ЮЗИК"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+test:
+  name: ${FIRST_NAME}
