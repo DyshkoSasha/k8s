@@ -1,0 +1,6 @@
+container:
+  image: alexdyshko/k8s:version2
+
+autoscaling:
+  maxReplicas: 3
+  minReplicas: 2

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myconf
+  labels:
+    app: myconf
+data:
+  FIRST_NAME: "Ну ты рили ЮЗИК ЛАБЭЦКИЙ"
+  SPRING_PROFILES_ACTIVE: prod
