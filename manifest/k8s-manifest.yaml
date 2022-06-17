@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: myname
-          image: alexdyshko/k8s:version1
+          image: alexdyshko/k8s:version2
           ports:
             - containerPort: 8080
           envFrom:
